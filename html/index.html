@@ -84,7 +84,6 @@
 
         $(document).ready(function() {
             $("#btn-register").click(async function() {
-                $("#loader").show();
                 const name = $("#name").val();
                 const school = $("#school").val();
                 const clss = $("#class").val();
@@ -113,6 +112,8 @@
                     alert("Please enter a valid phone");
                     return;
                 }
+
+                $("#loader").show();
 
                 try {
                     const account = {
