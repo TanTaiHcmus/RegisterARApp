@@ -27,7 +27,7 @@ body {
     background-position: center;
 }
 
-#main-content>div {
+#main-content>div:not(.loader) {
     width: 400px;
     padding: 0px 5px;
     margin-bottom: 25px;
@@ -80,7 +80,7 @@ body {
 }
 
 #main-content #btn-register {
-    margin-top: 30px;
+    margin-top: 20px;
     background-image: url("../imgs/button_selected.png");
     background-repeat: no-repeat;
     background-size: cover;
@@ -98,4 +98,38 @@ input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
     -webkit-transition: "color 9999s ease-out, background-color 9999s ease-out";
     -webkit-transition-delay: 9999s;
+}
+
+#loader {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid blue;
+    border-right: 16px solid green;
+    border-bottom: 16px solid red;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+    position: absolute;
+    left: 45%;
+    top: 37%;
+    display: none;
+}
+
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
