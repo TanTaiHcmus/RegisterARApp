@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>History AR Register</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../css/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div id="container">
+        <div class="red-bar"></div>
+        <div id="main-content">
+            <div>
+                <div>
+                    <i class="fas fa-info"></i>
+                    <input id="name" type="text" placeholder="@your name">
+                </div>
+            </div>
+            <div>
+                <div>
+                    <i class="fas fa-school"></i>
+                    <input id="school" type="text" placeholder="@your
+                            school">
+                </div>
+            </div>
+            <div>
+                <div>
+                    <i class="fas fa-school"></i>
+                    <input id="class" type="text" placeholder="@your class">
+                </div>
+            </div>
+            <div>
+                <div>
+                    <i class="fas fa-envelope-open"></i>
+                    <input id="email" type="email" placeholder="@your
+                            email">
+                </div>
+            </div>
+            <div>
+                <div>
+                    <i class="fas fa-phone"></i>
+                    <input id="phone" type="number" placeholder="@your
+                            phone">
+                </div>
+            </div>
+            <div>
+                <div>
+                    <i class="fas fa-user-circle"></i>
+                    <input id="username" type="text" placeholder="@username">
+                </div>
+            </div>
+            <div>
+                <div>
+                    <i class="fas fa-key"></i>
+                    <input id="password" type="password" placeholder="@password">
+                </div>
+            </div>
+            <div>
+                <div>
+                    <i class="fas fa-key"></i>
+                    <input id="confirm-password" type="password" placeholder="@confirm-password">
+                </div>
+            </div>
+            <div id="btn-register">
+                Register
+            </div>
+        </div>
+        <div class="red-bar"></div>
+    </div>
+    <script>
+        function isNull(str) {
+            return str === null || str.trim() === ""
+        }
+
+        function checkEmail(email) {
+            var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            return filter.test(email)
+        }
+
+        $(document).ready(function () {
+            $("#btn-register").click(async function () {
+                const name = $("#name").val();
+                const school = $("#school").val();
+                const clss = $("#class").val();
+                const email = $("#email").val();
+                const phone = $("#phone").val();
+                const username = $("#username").val();
+                const password = $("#password").val();
+                const confirmPassword = $("#confirm-password").val();
+                if (isNull(name) || isNull(school) || isNull(clss) || isNull(phone) || isNull(
+                        email) || isNull(username) || isNull(password) || isNull(confirmPassword)) {
+                    alert("Please fill out all information");
+                    return;
+                }
+                if (confirmPassword !== password) {
+                    alert("Password and confirm password are not the same");
+                    return;
+                }
+
+                if (!checkEmail(email)) {
+                    alert("Please enter a valid email");
+                    $("#email").focus();
+                    return;
+                }
+
+                if (phone.length != 10) {
+                    alert("Please enter a valid phone");
+                    return;
+                }
+
+                try {
+                    const account = {
+                        username: username,
+                        password: password,
+                        type: "1"
+                    }
+
+                    const data = await $.ajax({
+                        type: 'POST',
+                        url: 'https://arhistory.herokuapp.com/api/account/register',
+                        data: account
+                    })
+
+                    console.error(data)
+
+                    const user = {
+                        name: name,
+                        school: school,
+                        class: clss,
+                        score: 0,
+                        rank: 999999,
+                        email: email,
+                        phone: phone
+                    }
+
+                    const res = await $.ajax({
+                        type: 'POST',
+                        url: 'https://arhistory.herokuapp.com/api/user/create',
+                        headers: {
+                            'Authorization': `Bearer ${data.token}`
+                        },
+                        data: user
+                    })
+
+                    console.error(res)
+
+                    const userInfo = await $.ajax({
+                        type: "GET",
+                        url: "https://arhistory.herokuapp.com/api/user/",
+                        headers: {
+                            'Authorization': `Bearer ${data.token}`
+                        }
+                    })
+
+                    console.error(user)
+                } catch (error) {
+                    alert(error.responseText);
+                }
+            });
+        })
+    </script>
+</body>
+
+</html>
